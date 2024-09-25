@@ -1,0 +1,853 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Demo Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 26px;
+            margin: 0;
+        }
+
+
+        table {
+            display: block;
+            width: 100%;
+            border-collapse: collapse;
+            overflow: auto;
+        }
+
+        .header {
+            background: #000000;
+            padding: 2px;
+            display: flex;
+            align-items: center;
+
+
+        }
+
+        .cont {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            flex-basis: 100%
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .forge {
+            color: #FFCD00;
+            font-size: 22px;
+            font-family: 'Courier', monospace;
+
+        }
+
+        .img1 {
+            padding-top: 3px;
+            padding-bottom: 3px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content">
+        <h1>Enhancing Polyglot Voices by Leveraging Cross-Lingual Fine-Tuning in Any-to-One Voice Conversion</h1>
+        <p>
+            <b>Abstract:</b>
+            The creation of artificial polyglot voices remains a challenging task, despite considerable progress in recent years. This paper investigates self-supervised learning for voice conversion to create native-sounding polyglot voices. We introduce a novel cross-lingual any-to-one voice conversion system that is able to preserve the source accent without the need for multilingual data from the target speaker. In addition, we show a novel cross-lingual fine-tuning strategy that further improves the accent and reduces the training data requirements. Objective and subjective evaluations with English, Spanish, French and Mandarin Chinese confirm that our approach improves on state-of-the-art methods, enhancing the speech intelligibility and overall quality of the converted speech, especially in cross-lingual scenarios.
+        </p>
+
+        <h2 id="intra-lingual">Intra-lingual - English</h2>
+        <p>
+            In this section, we present some speech samples used in the intra-lingual subjective evaluation.<br>
+            We focus on any-to-one conversion using
+            <a href="https://keithito.com/LJ-Speech-Dataset/" target="_blank" rel="noopener noreferrer">LJSpeech</a> as
+            the target and <a href="https://www.openslr.org/12" target="_blank" rel="noopener noreferrer">LibriSpeech
+                test-clean</a> as the source speech.<br>
+            We compare <b>Proposed</b> and <b>Proposed-F</b> against two baselines: <b>Soft-VC</b> and <b>kNN-VC</b>. <br>
+        </p>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Target speaker: &nbsp;&nbsp;
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0107.wav">
+                        </audio>
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0303.wav">
+                        </audio>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table>
+            <thead>
+                <tr>
+					<th>Text</th>
+                    <th>Source</th>
+                    <th>Soft-VC</th>
+                    <th>kNN-VC</th>
+                    <th>Proposed</th>
+                    <th>Proposed-F</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+					<td>AY AND SHOW YOU SOME PRETTY TRICKS</td>
+                    <td>
+                        <audio name="61-70968-0062" controls preload="metadata" src="./english/source/61-70968-0062.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="61-70968-0062" controls preload="metadata" src="./english/softvc/61-70968-0062.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="61-70968-0062" controls preload="metadata" src="./english/knnvc/61-70968-0062.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="61-70968-0062" controls preload="metadata" src="./english/proposed/61-70968-0062.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="61-70968-0062" controls preload="metadata" src="./english/proposed-f/61-70968-0062.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>THE DEPARTING LADIES WHO HAD SAID THEY WOULD STAY DIDN'T OF COURSE THANK HEAVEN STAY THEY DEPARTED IN CONSEQUENCE OF ARRANGEMENTS MADE IN A RAGE OF CURIOSITY AS THEY PROFESSED PRODUCED BY THE TOUCHES WITH WHICH HE HAD ALREADY WORKED US UP</td>
+                    <td>
+                        <audio name="121-127105-0025" controls preload="metadata" src="./english/source/121-127105-0025.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="121-127105-0025" controls preload="metadata" src="./english/softvc/121-127105-0025.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="121-127105-0025" controls preload="metadata" src="./english/knnvc/121-127105-0025.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="121-127105-0025" controls preload="metadata" src="./english/proposed/121-127105-0025.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="121-127105-0025" controls preload="metadata" src="./english/proposed-f/121-127105-0025.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>AND I DECLARE IT'S TOO BAD THAT IT IS</td>
+					<td>
+                        <audio name="260-123440-0014" controls preload="metadata" src="./english/source/260-123440-0014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="260-123440-0014" controls preload="metadata" src="./english/softvc/260-123440-0014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="260-123440-0014" controls preload="metadata" src="./english/knnvc/260-123440-0014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="260-123440-0014" controls preload="metadata" src="./english/proposed/260-123440-0014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="260-123440-0014" controls preload="metadata" src="./english/proposed-f/260-123440-0014.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>WHY FADES THE LOTUS OF THE WATER</td>
+					<td>
+                        <audio name="908-157963-0002" controls preload="metadata" src="./english/source/908-157963-0002.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="908-157963-0002" controls preload="metadata" src="./english/softvc/908-157963-0002.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="908-157963-0002" controls preload="metadata" src="./english/knnvc/908-157963-0002.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="908-157963-0002" controls preload="metadata" src="./english/proposed/908-157963-0002.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="908-157963-0002" controls preload="metadata" src="./english/proposed-f/908-157963-0002.wav"></audio>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+
+
+        <h2 id="intra-lingual">Cross-lingual - French</h2>
+        <p>
+            In this section, we present some cross-lingual speech samples for French.<br>
+            We use <a href="https://keithito.com/LJ-Speech-Dataset/" target="_blank"
+                rel="noopener noreferrer">LJSpeech</a> as the target and <a
+                href="https://www.openslr.org/94" target="_blank"
+                rel="noopener noreferrer">Multilingual LibriSpeech (MLS) French dev + test</a> as source speech.<br>
+            We compare <b>Proposed</b> and <b>Proposed-F</b> against two baselines: <b>Soft-VC</b> and <b>kNN-VC</b>. <br>
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Target speaker: &nbsp;&nbsp;
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0107.wav">
+                        </audio>
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0303.wav">
+                        </audio>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table>
+            <thead>
+                <tr>
+					<th>Text</th>
+                    <th>Source</th>
+                    <th>Soft-VC</th>
+                    <th>kNN-VC</th>
+                    <th>Proposed</th>
+                    <th>Proposed-F</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+					<td>le sultan de son côté témoigna de l'impatience d'apprendre quel démêlé le génie avait eu avec salomon c'est pourquoi scheherazade poursuivit ainsi le conte du pêcheur</td>
+                    <td>
+                        <audio name="1406_1028_000014" controls preload="metadata" src="./french/source/1406_1028_000014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="1406_1028_000014" controls preload="metadata" src="./french/softvc/1406_1028_000014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="1406_1028_000014" controls preload="metadata" src="./french/knnvc/1406_1028_000014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="1406_1028_000014" controls preload="metadata" src="./french/proposed/1406_1028_000014.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="1406_1028_000014" controls preload="metadata" src="./french/proposed-f/1406_1028_000014.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>la paix ne fit que paraître la guerre recommença aussitôt par le dessein qu'eut le roi de faire arrêter à noyers le prince de condé et l'amiral de châtillon et ce dessein ayant été découvert l'on commença de nouveau les préparatifs de la guerre et le prince de monpensier fut contraint de quitter sa femme pour se rendre où son devoir l'appelait</td>
+                    <td>
+                        <audio name="5790_4893_000126" controls preload="metadata" src="./french/source/5790_4893_000126.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="5790_4893_000126" controls preload="metadata" src="./french/softvc/5790_4893_000126.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="5790_4893_000126" controls preload="metadata" src="./french/knnvc/5790_4893_000126.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="5790_4893_000126" controls preload="metadata" src="./french/proposed/5790_4893_000126.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="5790_4893_000126" controls preload="metadata" src="./french/proposed-f/5790_4893_000126.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>un vol d'oiseau nocturne au travers des charpentes d'un clocher mais il se calma mécontent de lui est-ce qu'on ne pouvait faire les choses froidement</td>
+                    <td>
+                        <audio name="7762_8734_000088" controls preload="metadata" src="./french/source/7762_8734_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="7762_8734_000088" controls preload="metadata" src="./french/softvc/7762_8734_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="7762_8734_000088" controls preload="metadata" src="./french/knnvc/7762_8734_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="7762_8734_000088" controls preload="metadata" src="./french/proposed/7762_8734_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="7762_8734_000088" controls preload="metadata" src="./french/proposed-f/7762_8734_000088.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>elle resta tristement au bord du toit d'où elle vit s'éloigner sa famille et elle serait certainement morte de faim de froid et de chagrin si les enfants de la maison ne l'avaient recueillie</td>
+                    <td>
+                        <audio name="10179_11051_000067" controls preload="metadata" src="./french/source/10179_11051_000067.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="10179_11051_000067" controls preload="metadata" src="./french/softvc/10179_11051_000067.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="10179_11051_000067" controls preload="metadata" src="./french/knnvc/10179_11051_000067.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="10179_11051_000067" controls preload="metadata" src="./french/proposed/10179_11051_000067.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="10179_11051_000067" controls preload="metadata" src="./french/proposed-f/10179_11051_000067.wav"></audio>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+
+        <h2 id="intra-lingual">Cross-lingual - Spanish</h2>
+        <p>
+            In this section, we present some cross-lingual speech samples for Spanish.<br>
+            We use <a href="https://keithito.com/LJ-Speech-Dataset/" target="_blank"
+                rel="noopener noreferrer">LJSpeech</a> as the target and <a
+                href="https://www.openslr.org/94" target="_blank"
+                rel="noopener noreferrer">Multilingual LibriSpeech (MLS) Spanish test</a> as source speech.<br>
+            We compare <b>Proposed</b> and <b>Proposed-F</b> against two baselines: <b>Soft-VC</b> and <b>kNN-VC</b>. <br>
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Target speaker: &nbsp;&nbsp;
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0107.wav">
+                        </audio>
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0303.wav">
+                        </audio>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table>
+            <thead>
+                <tr>
+					<th>Text</th>
+                    <th>Source</th>
+                    <th>Soft-VC</th>
+                    <th>kNN-VC</th>
+                    <th>Proposed</th>
+                    <th>Proposed-F</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+					<td>esta gentil moza pues ayudó a la doncella y las dos hicieron una muy mala cama a don quijote en un camaranchón que en otros tiempos daba manifiestos indicios que había servido de pajar muchos años</td>
+                    <td>
+                        <audio name="97_567_000001" controls preload="metadata" src="./spanish/source/97_567_000001.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="97_567_000001" controls preload="metadata" src="./spanish/softvc/97_567_000001.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="97_567_000001" controls preload="metadata" src="./spanish/knnvc/97_567_000001.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="97_567_000001" controls preload="metadata" src="./spanish/proposed/97_567_000001.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="97_567_000001" controls preload="metadata" src="./spanish/proposed-f/97_567_000001.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>con todo esto si yo no quiero dormir y estarme despierto toda la noche sin pegar pestaña será vuestra merced bastante con todo su poder para hacerme dormir si yo no quiero</td>
+                    <td>
+                        <audio name="3468_1378_000059" controls preload="metadata" src="./spanish/source/3468_1378_000059.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3468_1378_000059" controls preload="metadata" src="./spanish/softvc/3468_1378_000059.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3468_1378_000059" controls preload="metadata" src="./spanish/knnvc/3468_1378_000059.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3468_1378_000059" controls preload="metadata" src="./spanish/proposed/3468_1378_000059.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3468_1378_000059" controls preload="metadata" src="./spanish/proposed-f/3468_1378_000059.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>unos dicen que lo compuso homero el poeta ciego de la barba de rizos que andaba de pueblo en pueblo cantando sus versos al compás de la lira como hacían los aedas de entonces</td>
+                    <td>
+                        <audio name="3503_2162_000042" controls preload="metadata" src="./spanish/source/3503_2162_000042.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3503_2162_000042" controls preload="metadata" src="./spanish/softvc/3503_2162_000042.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3503_2162_000042" controls preload="metadata" src="./spanish/knnvc/3503_2162_000042.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3503_2162_000042" controls preload="metadata" src="./spanish/proposed/3503_2162_000042.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="3503_2162_000042" controls preload="metadata" src="./spanish/proposed-f/3503_2162_000042.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>ni gracia bastante para hacer de aquel pasado en el que aparecían enlazados ana y él un cuadro de contemplación peligrosa y es que ana pensaba con la señora de rusell que un matrimonio más adecuado hubiérale mejorado notablemente</td>
+                    <td>
+                        <audio name="12525_11991_000088" controls preload="metadata" src="./spanish/source/12525_11991_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="12525_11991_000088" controls preload="metadata" src="./spanish/softvc/12525_11991_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="12525_11991_000088" controls preload="metadata" src="./spanish/knnvc/12525_11991_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="12525_11991_000088" controls preload="metadata" src="./spanish/proposed/12525_11991_000088.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="12525_11991_000088" controls preload="metadata" src="./spanish/proposed-f/12525_11991_000088.wav"></audio>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+
+        <h2 id="intra-lingual">Cross-lingual - Mandarin Chinese</h2>
+        <p>
+            In this section, we present some cross-lingual speech samples for Mandarin Chinese.<br>
+            We use <a href="https://keithito.com/LJ-Speech-Dataset/" target="_blank"
+                rel="noopener noreferrer">LJSpeech</a> as the target and <a
+                href="https://www.openslr.org/33/" target="_blank"
+                rel="noopener noreferrer">Aishell dev + test</a> as source speech.<br>
+            We compare <b>Proposed</b> and <b>Proposed-F</b> against two baselines: <b>Soft-VC</b> and <b>kNN-VC</b>. <br>
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Target speaker: &nbsp;&nbsp;
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0107.wav">
+                        </audio>
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0303.wav">
+                        </audio>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table>
+            <thead>
+                <tr>
+					<th>Text</th>
+                    <th>Source</th>
+                    <th>Soft-VC</th>
+                    <th>kNN-VC</th>
+                    <th>Proposed</th>
+                    <th>Proposed-F</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+					<td>再  加  上  运用  金融  市场  的  手段</td>
+                    <td>
+                        <audio name="BAC009S0747W0187" controls preload="metadata" src="./chinese/source/BAC009S0747W0187.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0187" controls preload="metadata" src="./chinese/softvc/BAC009S0747W0187.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0187" controls preload="metadata" src="./chinese/knnvc/BAC009S0747W0187.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0187" controls preload="metadata" src="./chinese/proposed/BAC009S0747W0187.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0187" controls preload="metadata" src="./chinese/proposed-f/BAC009S0747W0187.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>发  改  委  项目  申报  流程</td>
+                    <td>
+                        <audio name="BAC009S0747W0217" controls preload="metadata" src="./chinese/source/BAC009S0747W0217.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0217" controls preload="metadata" src="./chinese/softvc/BAC009S0747W0217.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0217" controls preload="metadata" src="./chinese/knnvc/BAC009S0747W0217.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0217" controls preload="metadata" src="./chinese/proposed/BAC009S0747W0217.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0747W0217" controls preload="metadata" src="./chinese/proposed-f/BAC009S0747W0217.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>强化  农民  专业  合作社  组织  带动  能力</td>
+                    <td>
+                        <audio name="BAC009S0904W0204" controls preload="metadata" src="./chinese/source/BAC009S0904W0204.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0904W0204" controls preload="metadata" src="./chinese/softvc/BAC009S0904W0204.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0904W0204" controls preload="metadata" src="./chinese/knnvc/BAC009S0904W0204.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0904W0204" controls preload="metadata" src="./chinese/proposed/BAC009S0904W0204.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0904W0204" controls preload="metadata" src="./chinese/proposed-f/BAC009S0904W0204.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>加快  建设  环境  监测  预警  体系</td>
+					<td>
+                        <audio name="BAC009S0912W0248" controls preload="metadata" src="./chinese/source/BAC009S0912W0248.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0912W0248" controls preload="metadata" src="./chinese/softvc/BAC009S0912W0248.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0912W0248" controls preload="metadata" src="./chinese/knnvc/BAC009S0912W0248.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0912W0248" controls preload="metadata" src="./chinese/proposed/BAC009S0912W0248.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="BAC009S0912W0248" controls preload="metadata" src="./chinese/proposed-f/BAC009S0912W0248.wav"></audio>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+
+        <h2 id="intra-lingual">Ablation - Emotions Maintenance</h2>
+        <p>
+            In this section, we present some intra-lingual speech samples used in the ablation evaluation.<br>
+            We use <a href="https://keithito.com/LJ-Speech-Dataset/" target="_blank"
+                rel="noopener noreferrer">LJSpeech</a> as the target and <a
+                href="https://github.com/HLTSingapore/Emotional-Speech-Data" target="_blank"
+                rel="noopener noreferrer">Emotional Speech Dataset (ESD)</a> as source speech.<br>
+            We compare <b>Proposed</b> and <b>Proposed-F</b> considering four emotions: angry, happy, sad, surprise. <br>
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Target speaker: &nbsp;&nbsp;
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0107.wav">
+                        </audio>
+                    </th>
+                    <th>
+                        <audio controls preload="metadata"
+                            src="./target/LJ002-0303.wav">
+                        </audio>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table>
+            <thead>
+                <tr>
+					<th>Emotion</th>
+					<th>Text</th>
+                    <th>Source</th>
+                    <th>Proposed</th>
+                    <th>Proposed-F</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+					<td>Angry</td>
+					<td>At the roots-of a bush of a grass.</td>
+                    <td>
+                        <audio name="0013_000370" controls preload="metadata" src="./ablation/angry/source/0013_000370.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_000370" controls preload="metadata" src="./ablation/angry/proposed/0013_000370.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_000370" controls preload="metadata" src="./ablation/angry/proposed-f/0013_000370.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Angry</td>
+					<td>Why it is just like the round egg which sounds thin.</td>
+                    <td>
+                        <audio name="0014_000660" controls preload="metadata" src="./ablation/angry/source/0014_000660.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_000660" controls preload="metadata" src="./ablation/angry/proposed/0014_000660.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_000660" controls preload="metadata" src="./ablation/angry/proposed-f/0014_000660.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Angry</td>
+					<td>This speech roused dame Ilse to anger.</td>
+                    <td>
+                        <audio name="0016_000505" controls preload="metadata" src="./ablation/angry/source/0016_000505.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_000505" controls preload="metadata" src="./ablation/angry/proposed/0016_000505.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_000505" controls preload="metadata" src="./ablation/angry/proposed-f/0016_000505.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Angry</td>
+					<td>Our King George is labourers.</td>
+                    <td>
+                        <audio name="0017_000470" controls preload="metadata" src="./ablation/angry/source/0017_000470.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_000470" controls preload="metadata" src="./ablation/angry/proposed/0017_000470.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_000470" controls preload="metadata" src="./ablation/angry/proposed-f/0017_000470.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Angry</td>
+					<td>And there you'll find a snap dragon fly.</td>
+                    <td>
+                        <audio name="0020_000497" controls preload="metadata" src="./ablation/angry/source/0020_000497.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_000497" controls preload="metadata" src="./ablation/angry/proposed/0020_000497.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_000497" controls preload="metadata" src="./ablation/angry/proposed-f/0020_000497.wav"></audio>
+                    </td>
+                </tr>
+
+                <tr>
+					<td>Happy</td>
+					<td>Confess you opened the thirteenth door.</td>
+                    <td>
+                        <audio name="0013_000797" controls preload="metadata" src="./ablation/happy/source/0013_000797.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_000797" controls preload="metadata" src="./ablation/happy/proposed/0013_000797.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_000797" controls preload="metadata" src="./ablation/happy/proposed-f/0013_000797.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Happy</td>
+					<td>It says no way! shouted Daisy.</td>
+                    <td>
+                        <audio name="0014_000928" controls preload="metadata" src="./ablation/happy/source/0014_000928.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_000928" controls preload="metadata" src="./ablation/happy/proposed/0014_000928.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_000928" controls preload="metadata" src="./ablation/happy/proposed-f/0014_000928.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Happy</td>
+					<td>And they were sandy yellow brownish all over.</td>
+                    <td>
+                        <audio name="0016_000890" controls preload="metadata" src="./ablation/happy/source/0016_000890.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_000890" controls preload="metadata" src="./ablation/happy/proposed/0016_000890.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_000890" controls preload="metadata" src="./ablation/happy/proposed-f/0016_000890.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Happy</td>
+					<td>But one requires the explorer to furnish proofs.</td>
+                    <td>
+                        <audio name="0017_000838" controls preload="metadata" src="./ablation/happy/source/0017_000838.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_000838" controls preload="metadata" src="./ablation/happy/proposed/0017_000838.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_000838" controls preload="metadata" src="./ablation/happy/proposed-f/0017_000838.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Happy</td>
+					<td>We expected Tom would jump for joy.</td>
+                    <td>
+                        <audio name="0020_000791" controls preload="metadata" src="./ablation/happy/source/0020_000791.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_000791" controls preload="metadata" src="./ablation/happy/proposed/0020_000791.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_000791" controls preload="metadata" src="./ablation/happy/proposed-f/0020_000791.wav"></audio>
+                    </td>
+                </tr>
+
+                <tr>
+					<td>Sad</td>
+					<td>From August eighteenth, of their divorce.</td>
+                    <td>
+                        <audio name="0013_001102" controls preload="metadata" src="./ablation/sad/source/0013_001102.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_001102" controls preload="metadata" src="./ablation/sad/proposed/0013_001102.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_001102" controls preload="metadata" src="./ablation/sad/proposed-f/0013_001102.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Sad</td>
+					<td>Wake now my merry tads!</td>
+                    <td>
+                        <audio name="0014_001192" controls preload="metadata" src="./ablation/sad/source/0014_001192.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_001192" controls preload="metadata" src="./ablation/sad/proposed/0014_001192.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_001192" controls preload="metadata" src="./ablation/sad/proposed-f/0014_001192.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Sad</td>
+					<td>Clear than clear water!</td>
+                    <td>
+                        <audio name="0016_001055" controls preload="metadata" src="./ablation/sad/source/0016_001055.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_001055" controls preload="metadata" src="./ablation/sad/proposed/0016_001055.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_001055" controls preload="metadata" src="./ablation/sad/proposed-f/0016_001055.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Sad</td>
+					<td>Mister Lawson saw George last night.</td>
+                    <td>
+                        <audio name="0017_001163" controls preload="metadata" src="./ablation/sad/source/0017_001163.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_001163" controls preload="metadata" src="./ablation/sad/proposed/0017_001163.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_001163" controls preload="metadata" src="./ablation/sad/proposed-f/0017_001163.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Sad</td>
+					<td>Take courage all isn't lost yet.</td>
+                    <td>
+                        <audio name="0020_001094" controls preload="metadata" src="./ablation/sad/source/0020_001094.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_001094" controls preload="metadata" src="./ablation/sad/proposed/0020_001094.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_001094" controls preload="metadata" src="./ablation/sad/proposed-f/0020_001094.wav"></audio>
+                    </td>
+                </tr>
+
+                <tr>
+					<td>Surprise</td>
+					<td>The fisherman and his wife see George every day.</td>
+                    <td>
+                        <audio name="0013_001705" controls preload="metadata" src="./ablation/surprise/source/0013_001705.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_001705" controls preload="metadata" src="./ablation/surprise/proposed/0013_001705.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0013_001705" controls preload="metadata" src="./ablation/surprise/proposed-f/0013_001705.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Surprise</td>
+					<td>However, somebody killed something.</td>
+                    <td>
+                        <audio name="0014_001608" controls preload="metadata" src="./ablation/surprise/source/0014_001608.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_001608" controls preload="metadata" src="./ablation/surprise/proposed/0014_001608.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0014_001608" controls preload="metadata" src="./ablation/surprise/proposed-f/0014_001608.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Surprise</td>
+					<td>Story twenty nine a boy and a monkey.</td>
+                    <td>
+                        <audio name="0016_001443" controls preload="metadata" src="./ablation/surprise/source/0016_001443.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_001443" controls preload="metadata" src="./ablation/surprise/proposed/0016_001443.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0016_001443" controls preload="metadata" src="./ablation/surprise/proposed-f/0016_001443.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Surprise</td>
+					<td>Andy what's the gyre and to gimble.</td>
+                    <td>
+                        <audio name="0017_001406" controls preload="metadata" src="./ablation/surprise/source/0017_001406.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_001406" controls preload="metadata" src="./ablation/surprise/proposed/0017_001406.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0017_001406" controls preload="metadata" src="./ablation/surprise/proposed-f/0017_001406.wav"></audio>
+                    </td>
+                </tr>
+                <tr>
+					<td>Surprise</td>
+					<td>Come on my jack in the boxes!</td>
+                    <td>
+                        <audio name="0020_001474" controls preload="metadata" src="./ablation/surprise/source/0020_001474.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_001474" controls preload="metadata" src="./ablation/surprise/proposed/0020_001474.wav"></audio>
+                    </td>
+                    <td>
+                        <audio name="0020_001474" controls preload="metadata" src="./ablation/surprise/proposed-f/0020_001474.wav"></audio>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+
+</html>
